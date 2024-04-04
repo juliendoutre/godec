@@ -11,7 +11,7 @@ func TestColorEncoding(t *testing.T) {
 	red := uint8(13)
 	green := uint8(89)
 	blue := uint8(42)
-	codec := colors.New(&red, &green, &blue)
+	codec := colors.Codec(&red, &green, &blue)
 
 	out, err := codec.Encode()
 	assert.NoError(t, err)
@@ -20,7 +20,7 @@ func TestColorEncoding(t *testing.T) {
 
 func TestValidColorDecoding(t *testing.T) {
 	var red, green, blue uint8
-	codec := colors.New(&red, &green, &blue)
+	codec := colors.Codec(&red, &green, &blue)
 
 	remainder, err := codec.Decode([]byte("#3399ff"))
 	assert.NoError(t, err)

@@ -2,7 +2,7 @@ package colors
 
 import "github.com/juliendoutre/godec"
 
-func New(red, green, blue *uint8) godec.Sequence {
+func Codec(red, green, blue *uint8) godec.Sequence {
 	return godec.Sequence([]godec.Codec{
 		godec.ExactMatch([]byte("#")),
 		godec.HexadecimalUInt8{Variable: red},
