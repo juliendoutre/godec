@@ -2,6 +2,7 @@ package colors_test
 
 import (
 	"testing"
+	"testing/quick"
 
 	"github.com/juliendoutre/godec/examples/colors"
 	"github.com/stretchr/testify/assert"
@@ -28,4 +29,30 @@ func TestValidColorDecoding(t *testing.T) {
 	assert.Equal(t, uint8(51), red)
 	assert.Equal(t, uint8(153), green)
 	assert.Equal(t, uint8(255), blue)
+}
+
+func TestInversibleProperty(t *testing.T) {
+	f := func(expectedRed, expectedGreen, expectedBlue uint8) bool {
+		actualRed := expectedRed
+		actualGreen := expectedGreen
+		actualBlue := expectedBlue
+
+		encoder := colors.Codec(&expectedRed, &expectedGreen, &expectedBlue)
+		out, err := encoder.Encode()
+		if err != nil {
+			return false
+		}
+
+		decoder := colors.Codec(&actualRed, &actualGreen, &actualBlue)
+		remainder, err := decoder.Decode(out)
+		if err != nil {
+			return false
+		}
+
+		return len(remainder) == 0 && expectedRed == actualRed && expectedGreen == actualGreen && expectedBlue == actualBlue
+	}
+
+	if err := quick.Check(f, &quick.Config{}); err != nil {
+		t.Error(err)
+	}
 }
